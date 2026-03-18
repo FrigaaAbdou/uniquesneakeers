@@ -1,0 +1,806 @@
+<html lang="en" class="scroll-smooth bg-neutral-950 text-neutral-50 antialiased selection:bg-neutral-800 selection:text-white"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USNKRS — Authentic Heat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Hide scrollbar for clean swipeable areas */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* 1. Page Transition */
+        @keyframes fadeOut {
+            0%, 70% { opacity: 1; z-index: 100; pointer-events: auto; }
+            100% { opacity: 0; z-index: -1; pointer-events: none; visibility: hidden; }
+        }
+        @keyframes logoFlash {
+            0%, 100% { opacity: 0; transform: scale(0.95); letter-spacing: 0; }
+            40%, 60% { opacity: 1; transform: scale(1); letter-spacing: -0.05em; }
+        }
+        .page-transition {
+            animation: fadeOut 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .logo-flash {
+            animation: logoFlash 2s ease-in-out forwards;
+        }
+
+        /* 2. Announcement Marquee */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            animation: marquee 25s linear infinite;
+            display: flex;
+            width: max-content;
+        }
+
+        /* 3. Hero Animated Background */
+        @keyframes gridScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(64px); }
+        }
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 0.4; transform: translate(-50%, 0) scale(1); }
+            50% { opacity: 0.7; transform: translate(-50%, 0) scale(1.05); }
+        }
+        .animate-grid-scroll {
+            animation: gridScroll 15s linear infinite;
+        }
+        .animate-subtle-pulse {
+            animation: subtlePulse 8s ease-in-out infinite;
+        }
+
+        /* 3D hero carousel */
+        .hero-3d-carousel {
+            perspective: 1800px;
+            user-select: none;
+        }
+        .hero-3d-stage {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            touch-action: pan-y;
+            cursor: grab;
+            outline: none;
+        }
+        .hero-3d-stage.is-dragging,
+        .hero-3d-stage:active {
+            cursor: grabbing;
+        }
+        .hero-3d-stage.is-dragging .hero-3d-slide {
+            transition: none;
+        }
+        .hero-3d-stage:focus-visible {
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+            border-radius: 28px;
+        }
+        .hero-3d-slide {
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: min(80vw, 620px);
+            height: min(80vw, 620px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            background: transparent;
+            border: 0;
+            transition:
+                transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.45s ease,
+                filter 0.45s ease;
+            transform-style: preserve-3d;
+            will-change: transform, opacity, filter;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hero-3d-slide::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 6%;
+            width: 56%;
+            height: 22px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.55);
+            filter: blur(18px);
+            transform: translateX(-50%);
+            z-index: -1;
+            transition: opacity 0.45s ease, transform 0.45s ease;
+        }
+        .hero-3d-slide img {
+            width: auto;
+            height: auto;
+            max-width: 92%;
+            max-height: 92%;
+            pointer-events: none;
+            user-select: none;
+            filter:
+                drop-shadow(0 0 2px rgba(255, 255, 255, 0.95))
+                drop-shadow(0 0 6px rgba(255, 255, 255, 0.75))
+                drop-shadow(0 0 14px rgba(255, 255, 255, 0.32))
+                drop-shadow(0 28px 36px rgba(0, 0, 0, 0.55));
+            transform: rotate(40deg) scale(var(--image-scale, 1));
+            transform-origin: center center;
+            -webkit-user-drag: none;
+            transition: filter 0.45s ease, transform 0.45s ease;
+        }
+        .hero-3d-slide.is-active img {
+            filter:
+                drop-shadow(0 0 3px rgba(255, 255, 255, 1))
+                drop-shadow(0 0 10px rgba(255, 255, 255, 0.82))
+                drop-shadow(0 0 22px rgba(255, 255, 255, 0.4))
+                drop-shadow(0 34px 42px rgba(0, 0, 0, 0.58));
+        }
+        .product-cutout {
+            width: auto;
+            height: auto;
+            max-width: 88%;
+            max-height: 88%;
+            object-fit: contain;
+            pointer-events: none;
+            user-select: none;
+            filter:
+                drop-shadow(0 0 2px rgba(255, 255, 255, 0.95))
+                drop-shadow(0 0 6px rgba(255, 255, 255, 0.7))
+                drop-shadow(0 0 14px rgba(255, 255, 255, 0.26))
+                drop-shadow(0 22px 30px rgba(0, 0, 0, 0.5));
+            transition: transform 0.45s ease, filter 0.45s ease;
+            -webkit-user-drag: none;
+        }
+        .product-grid-card:hover .product-cutout {
+            transform: translateY(-6px) scale(1.03);
+            filter:
+                drop-shadow(0 0 3px rgba(255, 255, 255, 1))
+                drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))
+                drop-shadow(0 0 20px rgba(255, 255, 255, 0.32))
+                drop-shadow(0 28px 38px rgba(0, 0, 0, 0.56));
+        }
+        .product-cutout-shell {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.25rem;
+        }
+        .hero-3d-slide.is-active::after {
+            opacity: 0.9;
+            transform: translateX(-50%) scale(1.1);
+        }
+        .hero-3d-glow {
+            position: absolute;
+            left: 50%;
+            bottom: 8%;
+            width: min(70vw, 680px);
+            height: 120px;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent 72%);
+            filter: blur(42px);
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+        .hero-3d-controls {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        .hero-3d-control {
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(14px);
+            transition:
+                background-color 0.25s ease,
+                border-color 0.25s ease,
+                transform 0.25s ease;
+        }
+        .hero-3d-control:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.16);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="relative overflow-x-hidden">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Background (component) added by Aura -->
+<div class="aura-background-component fixed top-0 w-full h-screen -z-10" data-alpha-mask="80" style="; mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)"><div class="relative w-full h-[900px] -z-10 bg-gradient-to-b from-purple-900/20 via-blue-900/30 to-black/40 brightness-50 saturate-50" style="mask-image: linear-gradient(to bottom, transparent, black 0%, black 62%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 62%, transparent)" data-alpha-mask="62">
+  <div data-us-project="MSvSkmJb9Ax55PeV6eku" class="absolute w-full h-full left-0 top-0 -z-10 bg-gradient-to-br from-indigo-600/20 via-purple-600/20 to-pink-600/20"></div>
+  <script type="text/javascript">
+    !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.33/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+  </script>
+</div></div>
+
+    <!-- 1. Page Transition -->
+    <div class="page-transition fixed flex bg-neutral-950 z-[100] top-0 right-0 bottom-0 left-0 items-center justify-center">
+        <span class="logo-flash text-xl md:text-2xl font-semibold tracking-tighter text-white uppercase">USNKRS</span>
+    </div>
+
+    <!-- 2. Announcement Marquee -->
+    <div class="absolute top-0 w-full bg-neutral-900/80 backdrop-blur-md border-b border-white/5 overflow-hidden py-2 z-50">
+        <div class="animate-marquee gap-8 items-center text-xs tracking-wide text-neutral-400 uppercase font-medium">
+            <span>Authentic pairs only</span>
+            <span class="w-1 h-1 rounded-full bg-neutral-700"></span>
+            <span>New drops available now</span>
+            <span class="w-1 h-1 rounded-full bg-neutral-700"></span>
+            <span>Fast shipping worldwide</span>
+            <span class="w-1 h-1 rounded-full bg-neutral-700"></span>
+            <span>Limited stock on selected pairs</span>
+            <span class="w-1 h-1 rounded-full bg-neutral-700"></span>
+            <!-- Duplicate for seamless looping -->
+            <span>Authentic pairs only</span>
+            <span class="w-1 h-1 rounded-full bg-neutral-700"></span>
+            <span>New drops available now</span>
+            <span class="w-1 h-1 rounded-full bg-neutral-700"></span>
+            <span>Fast shipping worldwide</span>
+            <span class="w-1 h-1 rounded-full bg-neutral-700"></span>
+            <span>Limited stock on selected pairs</span>
+        </div>
+    </div>
+
+    <!-- Navigation Overlay -->
+    <nav class="absolute top-[34px] w-full z-40 flex justify-between items-center px-4 py-4 md:px-8 bg-gradient-to-b from-neutral-950/80 to-transparent pointer-events-auto">
+        <span class="text-lg font-semibold tracking-tighter text-white uppercase">USNKRS</span>
+        <div class="flex gap-4 items-center">
+            <button class="text-neutral-300 hover:text-white transition-colors"><iconify-icon icon="solar:magnifer-linear" stroke-width="1.5" class="text-xl"></iconify-icon></button>
+            <button class="text-neutral-300 hover:text-white transition-colors relative">
+                <iconify-icon icon="solar:cart-large-minimalistic-linear" stroke-width="1.5" class="text-xl"></iconify-icon>
+                <span class="absolute -top-1 -right-1 w-2 h-2 bg-white rounded-full"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 3. Hero Section with Carousel -->
+    <section class="min-h-[100svh] flex flex-col overflow-hidden bg-neutral-950 w-full pt-32 pb-8 relative justify-start">
+        
+        <!-- Animated Background Mood -->
+        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <!-- Animated Scrolling Grid -->
+            <div class="absolute -top-[100px] -bottom-[100px] left-0 right-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:64px_64px] animate-grid-scroll" style="-webkit-mask-image: radial-gradient(ellipse 100% 100% at 50% 30%, black 10%, transparent 70%); mask-image: radial-gradient(ellipse 100% 100% at 50% 30%, black 10%, transparent 70%);"></div>
+            <!-- Subtle Pulsating Glow -->
+            <div class="absolute top-0 left-1/2 w-[70vw] max-w-[800px] h-[50vw] max-h-[600px] bg-neutral-800/40 rounded-full blur-[100px] mix-blend-screen animate-subtle-pulse"></div>
+        </div>
+
+        <!-- Hero Text -->
+        <div class="md:px-8 flex flex-col md:mt-12 text-center max-w-2xl z-10 mt-4 mr-auto ml-auto pr-4 pl-4 relative items-center">
+            <h1 class="text-5xl md:text-7xl font-semibold tracking-tighter text-white mb-3 leading-[1.05]">Rare pairs.<br>Real heat.</h1>
+            <p class="text-sm md:text-base text-neutral-400 mb-8 max-w-sm font-medium">Curated authenticity. The most sought-after silhouettes curated for those who know.</p>
+            <button class="bg-white text-black px-8 py-3 rounded-full text-sm font-semibold tracking-tight hover:scale-[1.02] active:scale-[0.98] transition-transform shadow-[0_0_20px_rgba(255,255,255,0.1)]">Shop Now</button>
+        </div>
+
+        <!-- 3D Hero Carousel -->
+        <div class="md:pt-16 z-20 w-full pt-10 relative">
+            <div class="mx-auto w-full max-w-7xl px-4 md:px-8">
+                <div class="hero-3d-carousel relative mx-auto h-[340px] sm:h-[420px] md:h-[600px] w-full max-w-[1280px]" data-hero-carousel>
+                    <div class="hero-3d-glow"></div>
+                    <div class="hero-3d-stage" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Featured sneakers carousel">
+                        <button type="button" class="hero-3d-slide is-active" data-hero-slide aria-label="ASICS GEL-NYC Grey" style="--image-scale: 1.10;">
+                            <img src="assets/Products/ASICS-GEL-NYC-GREY.png" alt="ASICS GEL-NYC Grey sneaker">
+                        </button>
+                        <button type="button" class="hero-3d-slide" data-hero-slide aria-label="Nike P-6000 Metallic Silver" style="--image-scale: 1.0;">
+                            <img src="assets/Products/nike-p-6000-metallic-silver.png" alt="Nike P-6000 Metallic Silver sneaker">
+                        </button>
+                        <button type="button" class="hero-3d-slide" data-hero-slide aria-label="Nike Air Max DN Team Red" style="--image-scale: 1.04;">
+                            <img src="assets/Products/Nike-Air-Max-DN-W-Team-Red-Burgundy-Crush-Black-Pink-Foam.png" alt="Nike Air Max DN Team Red sneaker">
+                        </button>
+                        <button type="button" class="hero-3d-slide" data-hero-slide aria-label="Nike Shox TL Light Silver" style="--image-scale: 1.12;">
+                            <img src="assets/Products/Nike-Shox-TL-Trainers-Light-Silver-White-Light-Army.png" alt="Nike Shox TL Light Silver sneaker">
+                        </button>
+                        <button type="button" class="hero-3d-slide" data-hero-slide aria-label="ASICS Kayano 14" style="--image-scale: 1.0;">
+                            <img src="assets/Products/ASICS-KAYANO-14.png" alt="ASICS Kayano 14 sneaker">
+                        </button>
+                    </div>
+                    <div class="hero-3d-controls">
+                        <button type="button" class="hero-3d-control" data-hero-prev aria-label="Previous sneaker">
+                            <iconify-icon icon="solar:alt-arrow-left-linear" class="text-lg"></iconify-icon>
+                        </button>
+                        <button type="button" class="hero-3d-control" data-hero-next aria-label="Next sneaker">
+                            <iconify-icon icon="solar:alt-arrow-right-linear" class="text-lg"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. New Drop Section -->
+    <section class="py-16 md:py-24 px-4 md:px-8 max-w-7xl mx-auto border-t border-white/5">
+        <div class="flex flex-col items-center text-center mb-8 md:mb-12">
+            <div>
+                <h2 class="text-2xl md:text-3xl font-semibold tracking-tighter text-white">Just Landed</h2>
+                <p class="text-xs text-neutral-400 mt-1">The latest authenticated arrivals.</p>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
+            <a href="#" class="product-grid-card group flex flex-col items-center gap-4 text-center">
+                <div class="product-cutout-shell">
+                    <img src="assets/Products/ASICS-GEL-NYC-GREY.png" class="product-cutout" alt="ASICS GEL-NYC Grey sneaker">
+                </div>
+                <div>
+                    <h3 class="text-sm md:text-base font-medium tracking-tight text-white">ASICS GEL-NYC Grey</h3>
+                </div>
+            </a>
+
+            <a href="#" class="product-grid-card group flex flex-col items-center gap-4 text-center">
+                <div class="product-cutout-shell">
+                    <img src="assets/Products/ASICS-KAYANO-14.png" class="product-cutout" alt="ASICS Kayano 14 sneaker">
+                </div>
+                <div>
+                    <h3 class="text-sm md:text-base font-medium tracking-tight text-white">ASICS Kayano 14</h3>
+                </div>
+            </a>
+
+            <a href="#" class="product-grid-card group flex flex-col items-center gap-4 text-center">
+                <div class="product-cutout-shell">
+                    <img src="assets/Products/nike-p-6000-metallic-silver.png" class="product-cutout" alt="Nike P-6000 Metallic Silver sneaker">
+                </div>
+                <div>
+                    <h3 class="text-sm md:text-base font-medium tracking-tight text-white">Nike P-6000 Metallic Silver</h3>
+                </div>
+            </a>
+
+            <a href="#" class="product-grid-card group flex flex-col items-center gap-4 text-center">
+                <div class="product-cutout-shell">
+                    <img src="assets/Products/Nike-Shox-TL-Trainers-Light-Silver-White-Light-Army.png" class="product-cutout" alt="Nike Shox TL Light Silver sneaker">
+                </div>
+                <div>
+                    <h3 class="text-sm md:text-base font-medium tracking-tight text-white">Nike Shox TL Light Silver</h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="mt-4 md:mt-6 flex justify-center">
+            <a href="#" class="product-grid-card group flex flex-col items-center gap-4 text-center w-full max-w-[11rem] sm:max-w-[13rem] md:max-w-[18rem]">
+                <div class="product-cutout-shell">
+                    <img src="assets/Products/Nike-Air-Max-DN-W-Team-Red-Burgundy-Crush-Black-Pink-Foam.png" class="product-cutout" alt="Nike Air Max DN Team Red sneaker">
+                </div>
+                <div>
+                    <h3 class="text-sm md:text-base font-medium tracking-tight text-white">Nike Air Max DN Team Red</h3>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- 5. Collections Section -->
+    <!-- <section class="py-8 border-y border-white/5 overflow-hidden bg-neutral-900/20">
+        <div class="flex overflow-x-auto no-scrollbar px-4 gap-3 md:justify-center">
+            <button class="shrink-0 px-6 py-2.5 rounded-full border border-neutral-700 text-xs font-medium text-white bg-neutral-800 transition-colors">All Styles</button>
+            <button class="shrink-0 px-6 py-2.5 rounded-full border border-neutral-800/60 text-xs font-medium text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors bg-neutral-950/50">Nike</button>
+            <button class="shrink-0 px-6 py-2.5 rounded-full border border-neutral-800/60 text-xs font-medium text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors bg-neutral-950/50">Jordan</button>
+            <button class="shrink-0 px-6 py-2.5 rounded-full border border-neutral-800/60 text-xs font-medium text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors bg-neutral-950/50">Yeezy</button>
+            <button class="shrink-0 px-6 py-2.5 rounded-full border border-neutral-800/60 text-xs font-medium text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors bg-neutral-950/50">New Balance</button>
+            <button class="shrink-0 px-6 py-2.5 rounded-full border border-neutral-800/60 text-xs font-medium text-neutral-400 hover:text-white hover:border-neutral-600 transition-colors bg-neutral-950/50">Limited Edition</button>
+        </div>
+    </section> -->
+
+    <!-- 6. Editorial Brand Section -->
+    <section class="py-16 md:py-24 px-4 md:px-8 max-w-7xl mx-auto">
+        <div class="relative w-full aspect-[4/5] md:aspect-[21/9] rounded-2xl overflow-hidden flex items-center justify-center group border border-white/5">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/30104e3c-5eea-4b93-93e9-5313698a7156_1600w.webp" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-[1.5s] ease-out" alt="Brand Lifestyle">
+            <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent"></div>
+            
+            <div class="relative z-10 text-center max-w-xl px-6 mt-auto pb-12 md:pb-0 md:mt-0 flex flex-col items-center">
+                <iconify-icon icon="solar:star-fall-linear" stroke-width="1.5" class="text-2xl text-white mb-6 opacity-80"></iconify-icon>
+                <h2 class="text-3xl md:text-5xl font-semibold tracking-tighter text-white leading-[1.1] mb-4 text-balance">Curated authentic sneakers for people who move differently.</h2>
+                <p class="text-sm text-neutral-300 font-medium">More than a transaction. A destination for culture, design, and movement.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Best Sellers -->
+    <section class="py-16 pl-4 md:pl-8 overflow-hidden max-w-7xl mx-auto">
+        <div class="flex justify-between items-end mb-8 pr-4 md:pr-8">
+            <h2 class="text-2xl md:text-3xl font-semibold tracking-tighter text-white">Cult Classics</h2>
+            <div class="hidden md:flex gap-2">
+                <button class="w-10 h-10 rounded-full border border-neutral-800 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-neutral-900 transition-all"><iconify-icon icon="solar:alt-arrow-left-linear" stroke-width="1.5"></iconify-icon></button>
+                <button class="w-10 h-10 rounded-full border border-neutral-800 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-neutral-900 transition-all"><iconify-icon icon="solar:alt-arrow-right-linear" stroke-width="1.5"></iconify-icon></button>
+            </div>
+        </div>
+        
+        <div class="flex overflow-x-auto no-scrollbar gap-4 md:gap-6 pb-8 pr-4 md:pr-8 snap-x">
+            <!-- Card -->
+            <a href="#" class="snap-start shrink-0 w-[65vw] md:w-[300px] group flex flex-col gap-4">
+                <div class="w-full aspect-[4/5] bg-neutral-900 rounded-xl overflow-hidden relative border border-white/5">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/917d6f93-fb36-439a-8c48-884b67b35381_1600w.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Shoe">
+                    <div class="absolute top-3 right-3 bg-neutral-950/80 backdrop-blur-md px-2.5 py-1 rounded text-[10px] font-semibold tracking-wide text-white">#1</div>
+                </div>
+                <div class="">
+                    <h3 class="text-sm font-medium tracking-tight text-white line-clamp-1 group-hover:text-neutral-300 transition-colors">Nike Blazer Mid '77</h3>
+                    <p class="text-xs text-neutral-400 mt-1">$100</p>
+                </div>
+            </a>
+            <a href="#" class="snap-start shrink-0 w-[65vw] md:w-[300px] group flex flex-col gap-4">
+                <div class="w-full aspect-[4/5] bg-neutral-900 rounded-xl overflow-hidden relative border border-white/5">
+                    <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&amp;w=600&amp;auto=format&amp;fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Shoe">
+                    <div class="absolute top-3 right-3 bg-neutral-950/80 backdrop-blur-md px-2.5 py-1 rounded text-[10px] font-semibold tracking-wide text-white">#2</div>
+                </div>
+                <div>
+                    <h3 class="text-sm font-medium tracking-tight text-white line-clamp-1 group-hover:text-neutral-300 transition-colors">Converse Chuck 70</h3>
+                    <p class="text-xs text-neutral-400 mt-1">$85</p>
+                </div>
+            </a>
+            <a href="#" class="snap-start shrink-0 w-[65vw] md:w-[300px] group flex flex-col gap-4">
+                <div class="w-full aspect-[4/5] bg-neutral-900 rounded-xl overflow-hidden relative border border-white/5">
+                    <img src="https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&amp;w=600&amp;auto=format&amp;fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Shoe">
+                </div>
+                <div>
+                    <h3 class="text-sm font-medium tracking-tight text-white line-clamp-1 group-hover:text-neutral-300 transition-colors">Vans Old Skool</h3>
+                    <p class="text-xs text-neutral-400 mt-1">$70</p>
+                </div>
+            </a>
+             <a href="#" class="snap-start shrink-0 w-[65vw] md:w-[300px] group flex flex-col gap-4">
+                <div class="w-full aspect-[4/5] bg-neutral-900 rounded-xl overflow-hidden relative border border-white/5 flex items-center justify-center p-8">
+                    <span class="text-xs text-neutral-500 font-medium group-hover:text-white transition-colors">View All Bestsellers</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- 8. Community / Instagram Section -->
+    
+
+    <!-- 9. Countdown / Upcoming Drop Section -->
+    <section class="md:py-32 flex border-y overflow-hidden bg-neutral-950 border-white/5 pt-24 pr-4 pb-24 pl-4 relative items-center justify-center">
+        <!-- Subtle radial glow -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="w-full max-w-lg h-full bg-white/[0.02] rounded-full blur-[100px]"></div>
+        </div>
+        
+        <div class="relative z-10 flex flex-col items-center text-center w-full max-w-2xl mx-auto">
+            <span class="px-3 py-1 text-[10px] font-semibold uppercase tracking-widest border border-neutral-700 rounded-full mb-6 text-neutral-300 bg-neutral-900/50">Next Release</span>
+            <h2 class="text-3xl md:text-5xl font-semibold tracking-tighter mb-10 text-white">Travis Scott x Air Jordan 1 Low</h2>
+            
+            <div class="flex gap-4 md:gap-8 mb-10 border border-white/5 bg-neutral-900/40 backdrop-blur-md p-6 rounded-2xl">
+                <div class="flex flex-col items-center w-14 md:w-20">
+                    <span class="text-3xl md:text-5xl font-semibold tracking-tighter text-white">02</span>
+                    <span class="text-[10px] text-neutral-500 uppercase tracking-widest mt-2 font-medium">Days</span>
+                </div>
+                <span class="text-2xl text-neutral-700 mt-1 md:mt-2">:</span>
+                <div class="flex flex-col items-center w-14 md:w-20">
+                    <span class="text-3xl md:text-5xl font-semibold tracking-tighter text-white">14</span>
+                    <span class="text-[10px] text-neutral-500 uppercase tracking-widest mt-2 font-medium">Hours</span>
+                </div>
+                <span class="text-2xl text-neutral-700 mt-1 md:mt-2">:</span>
+                <div class="flex flex-col items-center w-14 md:w-20">
+                    <span class="text-3xl md:text-5xl font-semibold tracking-tighter text-white">45</span>
+                    <span class="text-[10px] text-neutral-500 uppercase tracking-widest mt-2 font-medium">Mins</span>
+                </div>
+            </div>
+            
+            <button class="bg-white text-black px-8 py-3 rounded-full text-sm font-semibold tracking-tight hover:scale-[1.02] active:scale-[0.98] transition-transform w-full md:w-auto">Notify Me</button>
+        </div>
+    </section>
+
+    <!-- 10. Newsletter -->
+    <section class="py-24 px-4 flex flex-col items-center text-center max-w-md mx-auto relative z-10">
+        <div class="w-12 h-12 bg-neutral-900 border border-white/5 rounded-full flex items-center justify-center mb-6">
+            <iconify-icon icon="solar:letter-linear" stroke-width="1.5" class="text-xl text-white"></iconify-icon>
+        </div>
+        <h2 class="text-2xl font-semibold tracking-tighter mb-2 text-white">Early Access</h2>
+        <p class="text-sm text-neutral-400 mb-8 font-medium">Join the list for exclusive drops, restock alerts, and insider news.</p>
+        
+        <form class="w-full flex relative group" onsubmit="event.preventDefault();">
+            <input type="email" placeholder="Email address" required="" class="w-full bg-neutral-900/50 border border-neutral-800 rounded-full py-3.5 pl-5 pr-32 text-sm outline-none focus:border-neutral-500 focus:bg-neutral-900 transition-colors placeholder:text-neutral-600 text-white shadow-inner">
+            <button type="submit" class="absolute right-1 top-1 bottom-1 bg-white text-black px-5 rounded-full text-xs font-semibold tracking-tight hover:bg-neutral-200 transition-colors">Subscribe</button>
+        </form>
+        <p class="text-[10px] text-neutral-600 mt-4">By subscribing you agree to our Terms &amp; Privacy Policy.</p>
+    </section>
+
+    <!-- 11. Footer -->
+    <footer class="py-10 px-4 md:px-8 border-t border-white/5 bg-neutral-950 flex flex-col md:flex-row justify-between items-center gap-8 md:gap-4 relative z-10">
+        <span class="text-sm font-semibold tracking-tighter text-white uppercase">USNKRS.</span>
+        
+        <ul class="flex flex-wrap justify-center gap-x-8 gap-y-4 text-xs text-neutral-500 font-medium">
+            <li><a href="#" class="hover:text-white transition-colors">Shop</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Shipping</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Returns</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Terms</a></li>
+        </ul>
+        
+        <div class="flex gap-5 text-neutral-500">
+            <a href="#" class="hover:text-white transition-colors"><iconify-icon icon="solar:hashtag-linear" class="text-lg"></iconify-icon></a>
+            <a href="#" class="hover:text-white transition-colors"><iconify-icon icon="solar:letter-linear" class="text-lg"></iconify-icon></a>
+        </div>
+    </footer>
+
+<script>
+    (() => {
+        const carousel = document.querySelector('[data-hero-carousel]');
+        if (!carousel) return;
+
+        const stage = carousel.querySelector('.hero-3d-stage');
+        const slides = Array.from(carousel.querySelectorAll('[data-hero-slide]'));
+        const prevButton = carousel.querySelector('[data-hero-prev]');
+        const nextButton = carousel.querySelector('[data-hero-next]');
+        const total = slides.length;
+        const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const poseStops = [
+            { x: 0, y: 0, z: 0, scale: 1, opacity: 1, blur: 0, rotateY: 0 },
+            { x: 54, y: 14, z: -180, scale: 0.82, opacity: 0.62, blur: 0.4, rotateY: 45 },
+            { x: 78, y: 28, z: -320, scale: 0.64, opacity: 0.26, blur: 1.2, rotateY: 58 },
+            { x: 88, y: 32, z: -380, scale: 0.56, opacity: 0, blur: 2, rotateY: 62 },
+        ];
+        let activeIndex = 2;
+        let dragProgress = 0;
+        let pointerId = null;
+        let startX = 0;
+        let startY = 0;
+        let lastX = 0;
+        let lastTime = 0;
+        let deltaX = 0;
+        let velocityX = 0;
+        let isDragging = false;
+        let isPointerDown = false;
+        let suppressClick = false;
+        let renderFrame = null;
+        let autoRotate = null;
+
+        function pauseAutoRotate() {
+            window.clearInterval(autoRotate);
+            autoRotate = null;
+        }
+
+        function restartAutoRotate() {
+            pauseAutoRotate();
+            if (motionQuery.matches || document.hidden) return;
+            autoRotate = window.setInterval(() => {
+                setActive(activeIndex + 1);
+            }, 4200);
+        }
+
+        function wrappedOffset(index, center = activeIndex) {
+            let offset = index - center;
+            if (offset > total / 2) offset -= total;
+            if (offset < -total / 2) offset += total;
+            return offset;
+        }
+
+        function lerp(a, b, t) {
+            return a + (b - a) * t;
+        }
+
+        function getPose(absOffset) {
+            const clamped = Math.min(absOffset, poseStops.length - 1);
+            const lowerIndex = Math.floor(clamped);
+            const upperIndex = Math.min(poseStops.length - 1, Math.ceil(clamped));
+            const progress = clamped - lowerIndex;
+            const lower = poseStops[lowerIndex];
+            const upper = poseStops[upperIndex];
+
+            return {
+                x: lerp(lower.x, upper.x, progress),
+                y: lerp(lower.y, upper.y, progress),
+                z: lerp(lower.z, upper.z, progress),
+                scale: lerp(lower.scale, upper.scale, progress),
+                opacity: lerp(lower.opacity, upper.opacity, progress),
+                blur: lerp(lower.blur, upper.blur, progress),
+                rotateY: lerp(lower.rotateY, upper.rotateY, progress),
+            };
+        }
+
+        function requestRender() {
+            if (renderFrame) return;
+            renderFrame = window.requestAnimationFrame(() => {
+                renderFrame = null;
+                render();
+            });
+        }
+
+        function applyStyles(slide, offset) {
+            const direction = offset === 0 ? 0 : offset < 0 ? -1 : 1;
+            const abs = Math.abs(offset);
+            const pose = getPose(abs);
+            const x = direction === 0 ? 0 : direction * pose.x;
+            const rotateY = direction === 0 ? 0 : direction < 0 ? pose.rotateY : -pose.rotateY;
+
+            slide.style.transform = `translate3d(${x}%, ${pose.y}px, ${pose.z}px) rotateY(${rotateY}deg) scale(${pose.scale})`;
+            slide.style.opacity = String(pose.opacity);
+            slide.style.filter = `blur(${pose.blur}px)`;
+            slide.style.zIndex = String(100 - Math.round(abs * 10));
+            slide.style.pointerEvents = abs > 2.35 ? 'none' : 'auto';
+            slide.classList.toggle('is-active', abs < 0.001);
+            slide.setAttribute('aria-hidden', abs > 2.35 ? 'true' : 'false');
+        }
+
+        function render() {
+            const virtualIndex = activeIndex - dragProgress;
+            slides.forEach((slide, index) => {
+                applyStyles(slide, wrappedOffset(index, virtualIndex));
+            });
+            stage.classList.toggle('is-dragging', isDragging);
+        }
+
+        function setActive(index) {
+            activeIndex = (index + total) % total;
+            dragProgress = 0;
+            isDragging = false;
+            requestRender();
+        }
+
+        function moveBy(step) {
+            setActive(activeIndex + step);
+            restartAutoRotate();
+        }
+
+        function getDragUnit() {
+            return Math.max(stage.clientWidth * 0.38, 180);
+        }
+
+        function onPointerDown(event) {
+            if (event.button !== undefined && event.button !== 0) return;
+            pointerId = event.pointerId;
+            isPointerDown = true;
+            isDragging = false;
+            suppressClick = false;
+            startX = event.clientX;
+            startY = event.clientY;
+            lastX = event.clientX;
+            lastTime = performance.now();
+            deltaX = 0;
+            velocityX = 0;
+            dragProgress = 0;
+            stage.setPointerCapture(pointerId);
+            pauseAutoRotate();
+            requestRender();
+        }
+
+        function onPointerMove(event) {
+            if (!isPointerDown || pointerId !== event.pointerId) return;
+
+            const now = performance.now();
+            const movementX = event.clientX - lastX;
+            const movementTime = Math.max(now - lastTime, 1);
+            velocityX = movementX / movementTime;
+            lastX = event.clientX;
+            lastTime = now;
+
+            deltaX = event.clientX - startX;
+            const deltaY = event.clientY - startY;
+
+            if (!isDragging) {
+                if (Math.abs(deltaX) < 8 || Math.abs(deltaX) <= Math.abs(deltaY)) {
+                    return;
+                }
+                isDragging = true;
+                suppressClick = true;
+            }
+
+            dragProgress = Math.max(-1.4, Math.min(1.4, deltaX / getDragUnit()));
+            event.preventDefault();
+            requestRender();
+        }
+
+        prevButton?.addEventListener('click', () => {
+            moveBy(-1);
+        });
+
+        nextButton?.addEventListener('click', () => {
+            moveBy(1);
+        });
+
+        slides.forEach((slide, index) => {
+            slide.addEventListener('click', (event) => {
+                if (suppressClick) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return;
+                }
+
+                const offset = Math.round(wrappedOffset(index));
+                if (offset !== 0) {
+                    moveBy(offset);
+                }
+            });
+        });
+
+        function completeGesture(event) {
+            if (!isPointerDown || pointerId !== event.pointerId) return;
+            const progress = dragProgress;
+            const velocity = velocityX;
+            let step = 0;
+
+            if (Math.abs(progress) > 0.18 || Math.abs(velocity) > 0.45) {
+                step = progress > 0 ? -1 : 1;
+            }
+
+            if (stage.hasPointerCapture(pointerId)) {
+                stage.releasePointerCapture(pointerId);
+            }
+
+            pointerId = null;
+            isPointerDown = false;
+            dragProgress = 0;
+            isDragging = false;
+
+            if (step !== 0) {
+                setActive(activeIndex + step);
+            } else {
+                requestRender();
+            }
+
+            window.setTimeout(() => {
+                suppressClick = false;
+            }, 60);
+            restartAutoRotate();
+        }
+
+        stage.addEventListener('pointerdown', onPointerDown);
+        stage.addEventListener('pointermove', onPointerMove);
+        stage.addEventListener('pointerup', completeGesture);
+        stage.addEventListener('pointercancel', completeGesture);
+        stage.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                moveBy(-1);
+            }
+            if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                moveBy(1);
+            }
+        });
+
+        carousel.addEventListener('mouseenter', pauseAutoRotate);
+        carousel.addEventListener('mouseleave', restartAutoRotate);
+        carousel.addEventListener('focusin', pauseAutoRotate);
+        carousel.addEventListener('focusout', (event) => {
+            if (carousel.contains(event.relatedTarget)) return;
+            restartAutoRotate();
+        });
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                pauseAutoRotate();
+            } else {
+                restartAutoRotate();
+            }
+        });
+        motionQuery.addEventListener('change', restartAutoRotate);
+
+        requestRender();
+        restartAutoRotate();
+    })();
+</script>
+
+</body></html>
