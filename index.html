@@ -67,6 +67,7 @@
             height: 100%;
             transform-style: preserve-3d;
             touch-action: pan-y;
+            overscroll-behavior: contain;
             cursor: grab;
             outline: none;
         }
@@ -75,6 +76,9 @@
             cursor: grabbing;
         }
         .hero-3d-stage.is-dragging .hero-3d-slide {
+            transition: none;
+        }
+        .hero-3d-stage.is-dragging .hero-3d-slide::after {
             transition: none;
         }
         .hero-3d-stage:focus-visible {
@@ -98,8 +102,9 @@
                 opacity 0.45s ease,
                 filter 0.45s ease;
             transform-style: preserve-3d;
-            will-change: transform, opacity, filter;
+            will-change: transform, opacity;
             -webkit-tap-highlight-color: transparent;
+            backface-visibility: hidden;
         }
         .hero-3d-slide::after {
             content: "";
@@ -131,6 +136,7 @@
             transform-origin: center center;
             -webkit-user-drag: none;
             transition: filter 0.45s ease, transform 0.45s ease;
+            backface-visibility: hidden;
         }
         .hero-3d-slide.is-active img {
             filter:
@@ -647,6 +653,7 @@
         let suppressClick = false;
         let renderFrame = null;
         let autoRotate = null;
+        let wheelCooldown = null;
 
         function pauseAutoRotate() {
             window.clearInterval(autoRotate);
@@ -705,10 +712,11 @@
             const pose = getPose(abs);
             const x = direction === 0 ? 0 : direction * pose.x;
             const rotateY = direction === 0 ? 0 : direction < 0 ? pose.rotateY : -pose.rotateY;
+            const blur = isDragging || isPointerDown ? 0 : pose.blur;
 
             slide.style.transform = `translate3d(${x}%, ${pose.y}px, ${pose.z}px) rotateY(${rotateY}deg) scale(${pose.scale})`;
             slide.style.opacity = String(pose.opacity);
-            slide.style.filter = `blur(${pose.blur}px)`;
+            slide.style.filter = `blur(${blur}px)`;
             slide.style.zIndex = String(100 - Math.round(abs * 10));
             slide.style.pointerEvents = abs > 2.35 ? 'none' : 'auto';
             slide.classList.toggle('is-active', abs < 0.001);
@@ -783,6 +791,23 @@
             requestRender();
         }
 
+        function onWheel(event) {
+            const dominantDelta = Math.abs(event.deltaX) > Math.abs(event.deltaY)
+                ? event.deltaX
+                : event.deltaY;
+
+            if (Math.abs(dominantDelta) < 16) return;
+
+            event.preventDefault();
+            if (wheelCooldown) return;
+
+            pauseAutoRotate();
+            moveBy(dominantDelta > 0 ? 1 : -1);
+            wheelCooldown = window.setTimeout(() => {
+                wheelCooldown = null;
+            }, 360);
+        }
+
         prevButton?.addEventListener('click', () => {
             moveBy(-1);
         });
@@ -812,7 +837,7 @@
             const velocity = velocityX;
             let step = 0;
 
-            if (Math.abs(progress) > 0.18 || Math.abs(velocity) > 0.45) {
+            if (Math.abs(progress) > 0.22 || Math.abs(velocity) > 0.55) {
                 step = progress > 0 ? -1 : 1;
             }
 
@@ -841,6 +866,7 @@
         stage.addEventListener('pointermove', onPointerMove);
         stage.addEventListener('pointerup', completeGesture);
         stage.addEventListener('pointercancel', completeGesture);
+        carousel.addEventListener('wheel', onWheel, { passive: false });
         stage.addEventListener('keydown', (event) => {
             if (event.key === 'ArrowLeft') {
                 event.preventDefault();
