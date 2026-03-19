@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth bg-neutral-950 text-neutral-50 antialiased selection:bg-neutral-800 selection:text-white">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USNKRS — Produit</title>
+    <link rel="icon" type="image/jpeg" href="assets/us-logo.jpg">
+    <link rel="apple-touch-icon" href="assets/us-logo.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .page-transition {
+            opacity: 1;
+            visibility: visible;
+            transition:
+                opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .page-transition.is-ready {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        @keyframes logoFlash {
+            0%, 100% { opacity: 0; transform: scale(0.95); letter-spacing: 0; }
+            40%, 60% { opacity: 1; transform: scale(1); letter-spacing: -0.05em; }
+        }
+        .logo-flash {
+            animation: logoFlash 2s ease-in-out forwards;
+        }
+        .loader-copy {
+            opacity: 0.75;
+            letter-spacing: 0.24em;
+        }
+        .product-main-image {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            filter:
+                drop-shadow(0 0 3px rgba(255, 255, 255, 0.98))
+                drop-shadow(0 0 10px rgba(255, 255, 255, 0.76))
+                drop-shadow(0 0 22px rgba(255, 255, 255, 0.28))
+                drop-shadow(0 36px 44px rgba(0, 0, 0, 0.58));
+            transform: rotate(18deg);
+            transform-origin: center center;
+            -webkit-user-drag: none;
+            user-select: none;
+        }
+        .detail-card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(14px);
+        }
+        .order-input,
+        .order-select,
+        .order-textarea {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            color: white;
+            border-radius: 1.25rem;
+            transition:
+                border-color 0.2s ease,
+                background-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+        .order-input,
+        .order-select {
+            min-height: 3.5rem;
+            padding: 0 1rem;
+        }
+        .order-textarea {
+            min-height: 8rem;
+            padding: 1rem;
+            resize: vertical;
+        }
+        .order-input::placeholder,
+        .order-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.34);
+        }
+        .order-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image:
+                linear-gradient(45deg, transparent 50%, rgba(255, 255, 255, 0.7) 50%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.7) 50%, transparent 50%);
+            background-position:
+                calc(100% - 22px) calc(50% - 3px),
+                calc(100% - 16px) calc(50% - 3px);
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+            padding-right: 2.75rem;
+        }
+        .order-select option {
+            background: #0a0a0a;
+            color: white;
+        }
+        .order-input:focus,
+        .order-select:focus,
+        .order-textarea:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+        .order-submit {
+            background: white;
+            color: black;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        .order-submit:hover {
+            transform: translateY(-1px);
+        }
+        .order-submit:active {
+            transform: translateY(0);
+            opacity: 0.92;
+        }
+        .size-chip {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.03);
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                background-color 0.2s ease;
+        }
+        .size-chip:hover {
+            transform: translateY(-1px);
+            border-color: rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .size-chip.is-active {
+            background: white;
+            color: black;
+            border-color: white;
+        }
+        .related-cutout {
+            width: auto;
+            height: auto;
+            max-width: 88%;
+            max-height: 88%;
+            object-fit: contain;
+            filter:
+                drop-shadow(0 0 2px rgba(255, 255, 255, 0.92))
+                drop-shadow(0 0 8px rgba(255, 255, 255, 0.52))
+                drop-shadow(0 24px 28px rgba(0, 0, 0, 0.48));
+            transition: transform 0.4s ease, filter 0.4s ease;
+            -webkit-user-drag: none;
+            user-select: none;
+        }
+        .related-card:hover .related-cutout {
+            transform: translateY(-6px) scale(1.03);
+            filter:
+                drop-shadow(0 0 3px rgba(255, 255, 255, 1))
+                drop-shadow(0 0 10px rgba(255, 255, 255, 0.68))
+                drop-shadow(0 30px 34px rgba(0, 0, 0, 0.54));
+        }
+    </style>
+</head>
+<body class="relative overflow-x-hidden bg-neutral-950">
+    <div class="page-transition fixed flex flex-col gap-4 bg-neutral-950 z-[100] top-0 right-0 bottom-0 left-0 items-center justify-center" data-loader>
+        <span class="logo-flash text-xl md:text-2xl font-semibold tracking-tighter text-white uppercase">USNKRS</span>
+        <span class="loader-copy text-[10px] font-medium text-neutral-500 uppercase" data-loader-status>Chargement du produit</span>
+    </div>
+
+    <div class="aura-background-component fixed top-0 w-full h-screen -z-10" data-alpha-mask="80" style="mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent);">
+        <div class="relative w-full h-[900px] -z-10 bg-gradient-to-b from-purple-900/20 via-blue-900/30 to-black/40 brightness-50 saturate-50" style="mask-image: linear-gradient(to bottom, transparent, black 0%, black 62%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 62%, transparent);" data-alpha-mask="62">
+            <div data-us-project="MSvSkmJb9Ax55PeV6eku" class="absolute w-full h-full left-0 top-0 -z-10 bg-gradient-to-br from-indigo-600/20 via-purple-600/20 to-pink-600/20"></div>
+            <script type="text/javascript">
+                !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.33/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
+            </script>
+        </div>
+    </div>
+
+    <nav class="absolute top-0 w-full z-40 flex justify-between items-center px-4 py-6 md:px-8 bg-gradient-to-b from-neutral-950/85 to-transparent">
+        <a href="index.html" class="text-lg font-semibold tracking-tighter text-white uppercase">USNKRS</a>
+        <div class="flex gap-4 items-center">
+            <a href="index.html#new-drops" class="text-xs font-medium text-neutral-400 hover:text-white transition-colors uppercase tracking-[0.2em]">Boutique</a>
+            <button class="text-neutral-300 hover:text-white transition-colors relative">
+                <iconify-icon icon="solar:cart-large-minimalistic-linear" stroke-width="1.5" class="text-xl"></iconify-icon>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <section class="min-h-[100svh] pt-28 pb-16 px-4 md:px-8 relative">
+            <div class="max-w-5xl mx-auto flex flex-col items-center text-center gap-8 md:gap-10">
+                <div class="relative w-full max-w-3xl min-h-[320px] md:min-h-[520px] flex items-center justify-center">
+                    <div class="absolute inset-x-0 bottom-8 mx-auto w-[70%] h-24 rounded-full bg-white/10 blur-[52px]"></div>
+                    <img src="assets/Products/ASICS-GEL-NYC-GREY.png" alt="Sneaker product image" class="product-main-image" loading="eager" decoding="sync" fetchpriority="high" data-product-image>
+                </div>
+
+                <div class="max-w-2xl flex flex-col items-center gap-5">
+                    <p class="text-[11px] text-neutral-500 uppercase tracking-[0.26em]" data-product-label>ASICS / Sélection archive</p>
+                    <h1 class="text-4xl md:text-6xl font-semibold tracking-tighter leading-[1.02] text-white" data-product-name>ASICS GEL-NYC Grey</h1>
+                    <p class="text-lg md:text-xl text-neutral-300 font-medium" data-product-price>$190</p>
+                    <p class="text-sm md:text-base text-neutral-400 max-w-xl leading-7" data-product-description>
+                        Une runner gris argent à la construction superposée, avec mesh texturé, semelle sculptée et allure archive pensée pour une rotation quotidienne premium.
+                    </p>
+
+                    <div class="flex flex-wrap justify-center gap-2 mt-2" data-size-list></div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <section class="py-10 md:py-16 px-4 md:px-8 border-t border-white/5">
+            <div class="max-w-4xl mx-auto flex flex-col items-center text-center gap-5 mb-8">
+                <p class="text-[10px] uppercase tracking-[0.24em] text-neutral-500">Demande de commande</p>
+                <h2 class="text-2xl md:text-4xl font-semibold tracking-tighter text-white">Réservez cette paire maintenant.</h2>
+                <p class="text-sm md:text-base text-neutral-400 max-w-2xl leading-7">
+                    La livraison se fait sous 24 heures à 2 jours maximum, et le paiement se fait à la livraison.
+                </p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <form name="product-order" method="POST" action="/product.html?success=1" data-netlify="true" netlify-honeypot="bot-field" class="detail-card rounded-[2rem] p-5 md:p-8">
+                    <input type="hidden" name="form-name" value="product-order">
+                    <input type="hidden" name="product" value="ASICS GEL-NYC Grey" data-product-input>
+                    <input type="hidden" name="selected_size" value="42" data-size-input>
+                    <p class="hidden">
+                        <label>Ne remplissez pas ce champ si vous êtes humain : <input name="bot-field"></label>
+                    </p>
+
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <label class="flex flex-col gap-2 text-left">
+                            <span class="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Nom complet</span>
+                            <input class="order-input text-sm" type="text" name="full_name" placeholder="Votre nom complet" autocomplete="name" required>
+                        </label>
+
+                        <label class="flex flex-col gap-2 text-left">
+                            <span class="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Numéro de téléphone</span>
+                            <input class="order-input text-sm" type="tel" name="phone_number" placeholder="Votre numéro de téléphone" autocomplete="tel" inputmode="tel" required>
+                        </label>
+
+                        <label class="flex flex-col gap-2 text-left">
+                            <span class="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Wilaya</span>
+                            <select class="order-select text-sm" name="wilaya" autocomplete="address-level1" required>
+                                <option value="" selected disabled>Choisissez votre wilaya</option>
+                                <option value="Adrar">01 · Adrar</option>
+                                <option value="Chlef">02 · Chlef</option>
+                                <option value="Laghouat">03 · Laghouat</option>
+                                <option value="Oum El Bouaghi">04 · Oum El Bouaghi</option>
+                                <option value="Batna">05 · Batna</option>
+                                <option value="Béjaïa">06 · Béjaïa</option>
+                                <option value="Biskra">07 · Biskra</option>
+                                <option value="Bechar">08 · Bechar</option>
+                                <option value="Blida">09 · Blida</option>
+                                <option value="Bouira">10 · Bouira</option>
+                                <option value="Tamanrasset">11 · Tamanrasset</option>
+                                <option value="Tbessa">12 · Tbessa</option>
+                                <option value="Tlemcen">13 · Tlemcen</option>
+                                <option value="Tiaret">14 · Tiaret</option>
+                                <option value="Tizi Ouzou">15 · Tizi Ouzou</option>
+                                <option value="Alger">16 · Alger</option>
+                                <option value="Djelfa">17 · Djelfa</option>
+                                <option value="Jijel">18 · Jijel</option>
+                                <option value="Se9tif">19 · Se9tif</option>
+                                <option value="Saefda">20 · Saefda</option>
+                                <option value="Skikda">21 · Skikda</option>
+                                <option value="Sidi Bel Abbes">22 · Sidi Bel Abbes</option>
+                                <option value="Annaba">23 · Annaba</option>
+                                <option value="Guelma">24 · Guelma</option>
+                                <option value="Constantine">25 · Constantine</option>
+                                <option value="Medea">26 · Medea</option>
+                                <option value="Mostaganem">27 · Mostaganem</option>
+                                <option value="M'Sila">28 · M'Sila</option>
+                                <option value="Mascara">29 · Mascara</option>
+                                <option value="Ouargla">30 · Ouargla</option>
+                                <option value="Oran">31 · Oran</option>
+                                <option value="El Bayadh">32 · El Bayadh</option>
+                                <option value="Illizi">33 · Illizi</option>
+                                <option value="Bordj Bou Arreridj">34 · Bordj Bou Arreridj</option>
+                                <option value="Boumerdes">35 · Boumerdes</option>
+                                <option value="El Tarf">36 · El Tarf</option>
+                                <option value="Tindouf">37 · Tindouf</option>
+                                <option value="Tissemsilt">38 · Tissemsilt</option>
+                                <option value="El Oued">39 · El Oued</option>
+                                <option value="Khenchela">40 · Khenchela</option>
+                                <option value="Souk Ahras">41 · Souk Ahras</option>
+                                <option value="Tipaza">42 · Tipaza</option>
+                                <option value="Mila">43 · Mila</option>
+                                <option value="Ain Defla">44 · Ain Defla</option>
+                                <option value="Naama">45 · Naama</option>
+                                <option value="Ain Temouchent">46 · Ain Temouchent</option>
+                                <option value="Ghardaefa">47 · Ghardaefa</option>
+                                <option value="Relizane">48 · Relizane</option>
+                                <option value="El M'ghair">49 · El M'ghair</option>
+                                <option value="El Menia">50 · El Menia</option>
+                                <option value="Ouled Djellal">51 · Ouled Djellal</option>
+                                <option value="Bordj Baji Mokhtar">52 · Bordj Baji Mokhtar</option>
+                                <option value="Béni Abbès">53 · Béni Abbès</option>
+                                <option value="Timimoun">54 · Timimoun</option>
+                                <option value="Touggourt">55 · Touggourt</option>
+                                <option value="Djanet">56 · Djanet</option>
+                                <option value="In Salah">57 · In Salah</option>
+                                <option value="In Guezzam">58 · In Guezzam</option>
+                            </select>
+                        </label>
+
+                        <label class="flex flex-col gap-2 text-left">
+                            <span class="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Code promo</span>
+                            <input class="order-input text-sm" type="text" name="promo_code" placeholder="Code promo optionnel" autocomplete="off">
+                        </label>
+                    </div>
+
+                    <label class="mt-4 flex flex-col gap-2 text-left">
+                        <span class="text-[11px] uppercase tracking-[0.22em] text-neutral-500">Adresse</span>
+                        <textarea class="order-textarea text-sm" name="address" placeholder="Rue, quartier, immeuble, indications de livraison..." autocomplete="street-address" required></textarea>
+                    </label>
+
+                    <div class="mt-6 flex flex-col items-center gap-3 text-center">
+                        <p class="text-xs text-neutral-500 max-w-xl leading-6">
+                            Votre demande sera envoyée directement pour confirmation. Nous utiliserons la pointure choisie et les coordonnées renseignées ici.
+                        </p>
+                        <button type="submit" class="order-submit w-full md:w-auto min-w-[14rem] rounded-full px-8 py-3 text-sm font-semibold tracking-tight">
+                            Confirmer la commande
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="py-10 md:py-16 px-4 md:px-8 border-t border-white/5">
+            <div class="max-w-5xl mx-auto grid gap-4 md:grid-cols-3">
+                <article class="detail-card rounded-3xl p-6 md:col-span-2">
+                    <p class="text-[10px] uppercase tracking-[0.24em] text-neutral-500 mb-3">Histoire du produit</p>
+                    <h2 class="text-2xl md:text-3xl font-semibold tracking-tighter text-white mb-4" data-story-title>Conçue pour une rotation quotidienne nette.</h2>
+                    <p class="text-sm md:text-base text-neutral-400 leading-7" data-story-body>
+                        La GEL-NYC Grey se situe entre running technique et pièce mode. Son upper superposé, ses détails argentés et sa semelle marquée permettent de la porter avec du denim, des coupes plus habillées ou un look streetwear complet sans perdre son ADN performance.
+                    </p>
+                </article>
+
+                <article class="detail-card rounded-3xl p-6">
+                    <p class="text-[10px] uppercase tracking-[0.24em] text-neutral-500 mb-3">Détails</p>
+                    <div class="space-y-3 text-sm text-neutral-300" data-specs-list></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="py-12 md:py-16 px-4 md:px-8 border-t border-white/5">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex flex-col items-center text-center mb-8">
+                    <p class="text-[10px] uppercase tracking-[0.24em] text-neutral-500 mb-3">À découvrir</p>
+                    <h2 class="text-2xl md:text-3xl font-semibold tracking-tighter text-white">Paires similaires</h2>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6" data-related-grid></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-10 px-4 md:px-8 border-t border-white/5 bg-neutral-950 flex flex-col md:flex-row justify-between items-center gap-8 md:gap-4 relative z-10">
+        <span class="text-sm font-semibold tracking-tighter text-white uppercase">USNKRS.</span>
+
+        <ul class="flex flex-wrap justify-center gap-x-8 gap-y-4 text-xs text-neutral-500 font-medium">
+            <li><a href="index.html" class="hover:text-white transition-colors">Accueil</a></li>
+            <li><a href="index.html#new-drops" class="hover:text-white transition-colors">Boutique</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">À propos</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Livraison</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Conditions</a></li>
+        </ul>
+
+        <div class="flex gap-5 text-neutral-500">
+            <a href="#" class="hover:text-white transition-colors"><iconify-icon icon="solar:hashtag-linear" class="text-lg"></iconify-icon></a>
+            <a href="#" class="hover:text-white transition-colors"><iconify-icon icon="solar:letter-linear" class="text-lg"></iconify-icon></a>
+        </div>
+    </footer>
+
+    <script>
+        (() => {
+            const products = {
+                'asics-gel-nyc-grey': {
+                    name: 'ASICS GEL-NYC Grey',
+                    label: 'ASICS / Sélection archive',
+                    price: '$190',
+                    image: 'assets/Products/ASICS-GEL-NYC-GREY.png',
+                    alt: 'ASICS GEL-NYC Grey sneaker',
+                    description: 'Une runner gris argent à la construction superposée, avec mesh texturé, semelle sculptée et allure archive pensée pour une rotation quotidienne premium.',
+                    sizes: ['40', '41', '42', '43', '44'],
+                    defaultSize: '42',
+                    storyTitle: 'Conçue pour une rotation quotidienne nette.',
+                    storyBody: 'La GEL-NYC Grey se situe entre running technique et pièce mode. Son upper superposé, ses détails argentés et sa semelle marquée permettent de la porter avec du denim, des coupes plus habillées ou un look streetwear complet sans perdre son ADN performance.',
+                    specs: [
+                        ['Tige', 'Mesh / empiècements synthétiques'],
+                        ['Coloris', 'Gris / Argent / Noir'],
+                        ['Catégorie', 'Runner lifestyle'],
+                        ['Inclus', 'Boîte + authentification'],
+                    ],
+                },
+                'asics-kayano-14': {
+                    name: 'ASICS Kayano 14',
+                    label: 'ASICS / Archive performance',
+                    price: '$205',
+                    image: 'assets/Products/ASICS-KAYANO-14.png',
+                    alt: 'ASICS Kayano 14 sneaker',
+                    description: 'Une runner métallique aux panneaux techniques superposés, au mesh respirant et à l’allure performance plus affirmée, facile à intégrer au quotidien.',
+                    sizes: ['40', '41', '42', '43', '44', '45'],
+                    defaultSize: '43',
+                    storyTitle: 'Une énergie technique pensée pour tous les jours.',
+                    storyBody: 'La Kayano 14 reprend le langage running de la fin des années 2000, mais sa forme reste précise et actuelle. C’est une paire qui donne du relief aux silhouettes simples tout en gardant une forte identité technique sous tous les angles.',
+                    specs: [
+                        ['Tige', 'Mesh ouvert / cage synthétique superposée'],
+                        ['Coloris', 'Argent / Blanc / Noir'],
+                        ['Catégorie', 'Runner technique'],
+                        ['Inclus', 'Boîte d’origine'],
+                    ],
+                },
+                'nike-p-6000-metallic-silver': {
+                    name: 'Nike P-6000 Metallic Silver',
+                    label: 'Nike / Rotation quotidienne',
+                    price: '$175',
+                    image: 'assets/Products/nike-p-6000-metallic-silver.png',
+                    alt: 'Nike P-6000 Metallic Silver sneaker',
+                    description: 'Une runner rétro légère avec structure métallique, mesh respirant et silhouette basse, parfaite pour une utilisation rapide au quotidien.',
+                    sizes: ['39', '40', '41', '42', '43', '44'],
+                    defaultSize: '42',
+                    storyTitle: 'Une runner simple avec juste ce qu’il faut de brillance.',
+                    storyBody: 'La P-6000 fonctionne parce qu’elle ne force rien. La silhouette reste fine, les empiècements apportent assez de mouvement, et la finition argent métallique lui donne une touche Y2K nette sans compliquer le styling.',
+                    specs: [
+                        ['Tige', 'Mesh / cuir / textile'],
+                        ['Coloris', 'Argent métallique / Blanc'],
+                        ['Catégorie', 'Running rétro'],
+                        ['Inclus', 'Boîte sur demande'],
+                    ],
+                },
+                'nike-shox-tl-light-silver': {
+                    name: 'Nike Shox TL Light Silver',
+                    label: 'Nike / Paire statement',
+                    price: '$210',
+                    image: 'assets/Products/Nike-Shox-TL-Trainers-Light-Silver-White-Light-Army.png',
+                    alt: 'Nike Shox TL Light Silver sneaker',
+                    description: 'Une silhouette Shox intégrale aux tons argentés et à la semelle immédiatement reconnaissable, pensée pour des rotations plus marquées.',
+                    sizes: ['40', '41', '42', '43', '44', '45'],
+                    defaultSize: '44',
+                    storyTitle: 'Conçue pour se faire remarquer de loin.',
+                    storyBody: 'La Shox TL n’est pas une paire discrète. Sa cage, sa finition réfléchissante et sa semelle à colonnes créent une silhouette immédiatement forte. C’est le bon choix quand la sneaker doit porter tout le look à elle seule.',
+                    specs: [
+                        ['Tige', 'Cage TPU / mesh respirant'],
+                        ['Coloris', 'Argent clair / Blanc / Vert clair'],
+                        ['Catégorie', 'Running statement'],
+                        ['Inclus', 'Boîte + vérification'],
+                    ],
+                },
+                'nike-air-max-dn-team-red': {
+                    name: 'Nike Air Max DN Team Red',
+                    label: 'Nike / Nouvelle génération',
+                    price: '$220',
+                    image: 'assets/Products/Nike-Air-Max-DN-W-Team-Red-Burgundy-Crush-Black-Pink-Foam.png',
+                    alt: 'Nike Air Max DN Team Red sneaker',
+                    description: 'Une Air Max plus audacieuse avec contraste bordeaux profond, amorti moderne et finition énergique pensée pour les looks qui ressortent.',
+                    sizes: ['38.5', '39', '40', '41', '42', '43'],
+                    defaultSize: '41',
+                    storyTitle: 'Une Air Max moderne avec plus d’attitude.',
+                    storyBody: 'La Air Max DN fait avancer la ligne avec un upper sculpté et une palette plus riche. Team Red et Burgundy Crush lui donnent une présence plus forte qu’une runner argent classique, parfaite quand une seule paire doit apporter toute l’énergie.',
+                    specs: [
+                        ['Tige', 'Textile superposé / coque synthétique'],
+                        ['Coloris', 'Team Red / Burgundy Crush / Noir / Pink Foam'],
+                        ['Catégorie', 'Runner lifestyle moderne'],
+                        ['Inclus', 'Packaging d’origine'],
+                    ],
+                },
+            };
+
+            const productKeys = Object.keys(products);
+            const params = new URLSearchParams(window.location.search);
+            const requestedKey = params.get('product');
+            const currentKey = productKeys.includes(requestedKey) ? requestedKey : 'asics-gel-nyc-grey';
+            const currentProduct = products[currentKey];
+            const loader = document.querySelector('[data-loader]');
+            const loaderStatus = document.querySelector('[data-loader-status]');
+            const productImage = document.querySelector('[data-product-image]');
+            const productLabel = document.querySelector('[data-product-label]');
+            const productName = document.querySelector('[data-product-name]');
+            const productPrice = document.querySelector('[data-product-price]');
+            const productDescription = document.querySelector('[data-product-description]');
+            const sizeList = document.querySelector('[data-size-list]');
+            const productInput = document.querySelector('[data-product-input]');
+            const sizeInput = document.querySelector('[data-size-input]');
+            const storyTitle = document.querySelector('[data-story-title]');
+            const storyBody = document.querySelector('[data-story-body]');
+            const specsList = document.querySelector('[data-specs-list]');
+            const relatedGrid = document.querySelector('[data-related-grid]');
+            const orderForm = document.querySelector('form[name="product-order"]');
+            let sizeChips = [];
+
+            function renderProduct() {
+                document.title = `USNKRS — ${currentProduct.name}`;
+                if (productImage) {
+                    productImage.src = currentProduct.image;
+                    productImage.alt = currentProduct.alt;
+                }
+                if (productLabel) productLabel.textContent = currentProduct.label;
+                if (productName) productName.textContent = currentProduct.name;
+                if (productPrice) productPrice.textContent = currentProduct.price;
+                if (productDescription) productDescription.textContent = currentProduct.description;
+                if (productInput) productInput.value = currentProduct.name;
+                if (storyTitle) storyTitle.textContent = currentProduct.storyTitle;
+                if (storyBody) storyBody.textContent = currentProduct.storyBody;
+                if (orderForm) orderForm.action = `/product.html?product=${currentKey}&success=1`;
+
+                if (sizeList) {
+                    sizeList.innerHTML = currentProduct.sizes.map((size) => `
+                        <button type="button" class="size-chip px-4 py-2 rounded-full text-sm text-white" data-size-chip data-size-value="${size}" aria-pressed="false">${size}</button>
+                    `).join('');
+                    sizeChips = Array.from(sizeList.querySelectorAll('[data-size-chip]'));
+                }
+
+                if (specsList) {
+                    specsList.innerHTML = currentProduct.specs.map(([label, value]) => `
+                        <div class="flex justify-between gap-4">
+                            <span class="text-neutral-500">${label}</span>
+                            <span class="text-right">${value}</span>
+                        </div>
+                    `).join('');
+                }
+
+                if (relatedGrid) {
+                    relatedGrid.innerHTML = productKeys
+                        .filter((key) => key !== currentKey)
+                        .map((key) => {
+                            const product = products[key];
+                            return `
+                                <a href="product.html?product=${key}" class="related-card group flex flex-col items-center gap-4 text-center">
+                                    <div class="w-full aspect-square flex items-center justify-center">
+                                        <img src="${product.image}" alt="${product.alt}" class="related-cutout" loading="lazy" decoding="async">
+                                    </div>
+                                    <h3 class="text-sm md:text-base font-medium tracking-tight text-white">${product.name}</h3>
+                                </a>
+                            `;
+                        }).join('');
+                }
+            }
+
+            function setActiveSize(value) {
+                sizeChips.forEach((chip) => {
+                    const isActive = chip.dataset.sizeValue === value;
+                    chip.classList.toggle('is-active', isActive);
+                    chip.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+                });
+                if (sizeInput) sizeInput.value = value;
+            }
+
+            function bindSizeChips() {
+                sizeChips.forEach((chip) => {
+                    chip.addEventListener('click', () => {
+                        setActiveSize(chip.dataset.sizeValue || chip.textContent.trim());
+                    });
+                });
+            }
+
+            renderProduct();
+            bindSizeChips();
+            setActiveSize(currentProduct.defaultSize);
+
+            if (!loader) return;
+
+            const criticalSources = Array.from(new Set(productKeys.map((key) => products[key].image)));
+
+            function preloadImage(src) {
+                return new Promise((resolve) => {
+                    const image = new Image();
+                    image.decoding = 'async';
+                    image.loading = 'eager';
+                    image.src = src;
+
+                    const done = () => resolve(src);
+                    if (image.complete) {
+                        if (typeof image.decode === 'function') {
+                            image.decode().catch(() => {}).finally(done);
+                        } else {
+                            done();
+                        }
+                        return;
+                    }
+
+                    image.addEventListener('load', done, { once: true });
+                    image.addEventListener('error', done, { once: true });
+                });
+            }
+
+            async function waitForCriticalAssets() {
+                const total = criticalSources.length;
+                let loaded = 0;
+
+                const updateStatus = () => {
+                    if (!loaderStatus) return;
+                    loaderStatus.textContent = total === 0
+                        ? 'Préparation de la page produit'
+                        : `Chargement du produit ${loaded}/${total}`;
+                };
+
+                updateStatus();
+
+                const tasks = criticalSources.map((src) =>
+                    preloadImage(src).then(() => {
+                        loaded += 1;
+                        updateStatus();
+                    }),
+                );
+
+                const fontsReady = document.fonts?.ready ?? Promise.resolve();
+                const timeout = new Promise((resolve) => window.setTimeout(resolve, 4500));
+
+                await Promise.race([
+                    Promise.all([fontsReady, Promise.all(tasks)]),
+                    timeout,
+                ]);
+            }
+
+            waitForCriticalAssets().finally(() => {
+                if (loaderStatus) loaderStatus.textContent = 'Prêt';
+                window.setTimeout(() => {
+                    loader.classList.add('is-ready');
+                }, 180);
+            });
+        })();
+    </script>
+</body>
+</html>
